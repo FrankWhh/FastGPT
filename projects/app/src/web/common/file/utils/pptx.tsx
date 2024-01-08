@@ -11,11 +11,10 @@ import {
 } from './ppt';
 
 function processPPTX(data: ArrayBuffer) {
-  const zip = new JSZip();
-  const zipData = zip.file('data', data);
-  const filesInfo = getContentTypes(zipData);
-  const slideSize = getSlideSize(zipData);
-  const themeContent = loadTheme(zipData);
+  const zip = new JSZip(data);
+  const filesInfo = getContentTypes(zip);
+  const slideSize = getSlideSize(zip);
+  const themeContent = loadTheme(zip);
   setThemeContent(themeContent);
 
   const numOfSlides = filesInfo['slides'].length;
