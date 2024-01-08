@@ -95,8 +95,8 @@ export const readPptContent = (file: File, metadata: Record<string, any>) =>
           };
 
           const html = renderToString(<MyComponent />);
-          const res = { value: html };
-          const rawText = await uploadMarkdownBase64(res?.value, metadata);
+          const md = htmlStr2Md(html);
+          const rawText = await uploadMarkdownBase64(md, metadata);
 
           resolve(rawText);
         } catch (error) {
