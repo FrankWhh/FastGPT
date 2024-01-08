@@ -8,7 +8,8 @@ import {
   fileDownload,
   readCsvContent,
   readPdfContent,
-  readDocContent
+  readDocContent,
+  readPptContent
 } from '@/web/common/file/utils';
 import { readFileRawText, readMdFile, readHtmlFile } from '@fastgpt/web/common/file/read';
 import { getUploadMdImgController, uploadFiles } from '@/web/common/file/controller';
@@ -190,6 +191,8 @@ const FileSelect = ({
                 return readDocContent(file, {
                   fileId
                 });
+              case 'pptx':
+                return readPptContent(file, { fileId });
             }
             return '';
           })();

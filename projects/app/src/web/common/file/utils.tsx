@@ -5,6 +5,8 @@ import { simpleMarkdownText } from '@fastgpt/global/common/string/markdown';
 import { htmlStr2Md } from '@fastgpt/web/common/string/markdown';
 import { readPdfFile } from '@fastgpt/global/common/file/read/index';
 import { readFileRawText } from '@fastgpt/web/common/file/read';
+import { renderToString } from 'react-dom/server';
+import Pptx2Html from './utils/pptx';
 
 /**
  * read pdf to raw text
@@ -70,6 +72,49 @@ export const readDocContent = (file: File, metadata: Record<string, any>) =>
         console.log('error doc read:', err);
 
         reject('读取 doc 文件失败');
+      };
+    } catch (error) {
+      reject('浏览器不支持文件内容读取');
+    }
+  });
+
+/**
+ * read ppt to markdown
+ */
+export const readPptContent = (file: File, metadata: Record<string, any>) =>
+  new Promise<string>((resolve, reject) => {
+    try {
+      const reader = new FileReader();
+      reader.readAsArrayBuffer(file);
+      reader.onload = async ({ target }) => {
+        if (!target?.result) return reject('读取 ppt 文件失败');
+        try {
+          const buffer = target.result as ArrayBuffer;
+          const MyComponent = () => {
+            return Pptx2Html(buffer);
+          };
+
+          const html = renderToString(<MyComponent />);
+          const res = { value: html };
+          const rawText = await uploadMarkdownBase64(res?.value, metadata);
+
+          resolve(rawText);
+        } catch (error) {
+          window.umami?.track('pptReadError', {
+            err: error?.toString()
+          });
+          console.log('error ppt read:', error);
+
+          reject('读取 ppt 文件失败, 请转换成 PDF');
+        }
+      };
+      reader.onerror = (err) => {
+        window.umami?.track('pptReadError', {
+          err: err?.toString()
+        });
+        console.log('error ppt read:', err);
+
+        reject('读取 ppt 文件失败');
       };
     } catch (error) {
       reject('浏览器不支持文件内容读取');

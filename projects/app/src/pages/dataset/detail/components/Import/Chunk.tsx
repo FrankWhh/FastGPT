@@ -19,7 +19,7 @@ import { useDatasetStore } from '@/web/core/dataset/store/dataset';
 import { useImportStore, SelectorContainer, PreviewFileOrChunk } from './Provider';
 import { useTranslation } from 'next-i18next';
 
-const fileExtension = '.txt, .docx, .pdf, .md, .html';
+const fileExtension = '.txt, .docx, .pptx, .pdf, .md, .html';
 
 const ChunkImport = () => {
   const { t } = useTranslation();
