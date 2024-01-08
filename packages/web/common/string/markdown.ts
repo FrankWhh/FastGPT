@@ -17,7 +17,7 @@ export const htmlStr2Md = (html: string) => {
   const parser = new DOMParser();
   const dom = parser.parseFromString(html, 'text/html');
 
-  turndownService.remove(['i', 'script', 'iframe']);
+  turndownService.remove(['i', 'script', 'iframe', 'style']);
   turndownService.addRule('codeBlock', {
     filter: 'pre',
     replacement(_, node) {
